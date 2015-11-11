@@ -43,7 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandTranslater.cs" />
+    <Compile Include="DictionaryExtension.cs" />
     <Compile Include="MarkDownProcessor.cs" />
+    <Compile Include="MarkDownStringProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
