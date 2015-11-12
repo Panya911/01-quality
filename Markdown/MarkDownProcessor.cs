@@ -1,32 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Markdown
 {
     public class MarkDownProcessor
     {
-        private readonly CommandTranslater _translater;
-        private readonly MarkDownStringProcessor _markdownStringProcessor;
-
-        public MarkDownProcessor(Dictionary<string, Command> commands)
+        public static string ProcessText(string text, Dictionary<string, Command> commands)
         {
-            _markdownStringProcessor = new MarkDownStringProcessor(commands);
-        }
-
-        public string HanldeBlock(string str)
-        {
-            throw new NotImplementedException();
-        }
-
-        private string TranslateCommandToNeedForm(string command, Stack<string> openedTags)
-        {
-            if (!_translater.IsCloseableCommand(command))
-                return _translater.GetOpenedForm(command);
-
-            if (openedTags.Count > 0 && openedTags.Peek() == command)
-                return _translater.GetClosedForm(openedTags.Pop());
-            openedTags.Push(command);
-            return _translater.GetOpenedForm(command);
+            var strBuilder = new StringBuilder();
+            var paragraphs = MarkDownParagraphDivider.DivideStringOnParagraph(text);
+            foreach (var paragraph in paragraphs)
+            {
+                var stringProcessor = new MarkDownStringProcessor(paragraph, commands);
+                var result = stringProcessor.Process();
+                strBuilder.Append("<p>" + result + "</p>");
+            }
+            return strBuilder.ToString();
         }
     }
 }

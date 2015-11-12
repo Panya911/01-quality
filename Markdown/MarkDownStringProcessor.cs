@@ -32,38 +32,38 @@ namespace Markdown
                 var answer = _translater.CanDefineCommand(temp);
                 switch (answer)
                 {
-                    case CommandTranslater.Answer.No:
+                    case CommandTranslater.CanDefineCommandAnswer.No:
                         {
                             _index += ProcessAsSimpleText(temp);
                             temp = "";
                             break;
                         }
-                    case CommandTranslater.Answer.EscapeSymbol:
+                    case CommandTranslater.CanDefineCommandAnswer.EscapeSymbol:
                         {
                             _index += ProcessAsEscapeSimbol();
                             temp = "";
                             break;
                         }
-                    case CommandTranslater.Answer.Yes:
+                    case CommandTranslater.CanDefineCommandAnswer.Yes:
                         {
-                            if (IsBetweenDigits(_index, temp))
+                            if (IsNearDigit(_index, temp))
                                 _index += ProcessAsSimpleText(temp);
                             else
                                 _index += ProcessAsCommand(temp, _index);
                             temp = "";
                             break;
                         }
-                    case CommandTranslater.Answer.YesButCanBeLonger:
+                    case CommandTranslater.CanDefineCommandAnswer.YesButCanBeLonger:
                         {
                             var cmd = GetMaxCommand(temp, _index);
-                            if (IsBetweenDigits(_index, cmd))
+                            if (IsNearDigit(_index, cmd))
                                 _index += ProcessAsSimpleText(cmd);
                             else
                                 _index += ProcessAsCommand(cmd, _index);
                             temp = "";
                             break;
                         }
-                    case CommandTranslater.Answer.Maybe:
+                    case CommandTranslater.CanDefineCommandAnswer.Maybe:
                         {
                             _index++;
                             break;
@@ -72,11 +72,6 @@ namespace Markdown
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            //if (_openedCommands.Count != 0)
-            //    foreach (var command in _openedCommands)
-            //    {
-            //        _result.Insert(command.Position, command.Command);
-            //    }
             return _result.ToString();
         }
 
@@ -88,7 +83,19 @@ namespace Markdown
 
         private int ProcessAsEscapeSimbol()
         {
-            _result.Append(_str[_index + 1]);
+            var nextSymbol = _str[_index + 1];
+            switch (nextSymbol)
+            {
+                case '<':
+                    _result.Append("&lt;");
+                    break;
+                case '>':
+                    _result.Append("&gt;");
+                    break;
+                default:
+                    _result.Append(nextSymbol);
+                    break;
+            }
             return 2;
         }
 
@@ -124,14 +131,9 @@ namespace Markdown
         private string GetNeededTag(string str, int index)
         {
             if (!_translater.IsCloseableCommand(str))
-            {
                 return _translater.GetOpenedForm(str);
-
-            }
             if (PeekItemIsTheSame(str))
-            {
                 return _translater.GetClosedForm(_openedCommands.Pop().Command);
-            }
             _openedCommands.Push(new CommandIntoText(str, index));//todo
             return _translater.GetOpenedForm(str);
         }
@@ -141,10 +143,10 @@ namespace Markdown
             return _openedCommands.Count > 0 && _openedCommands.Peek().Command == command;
         }
 
-        private bool IsBetweenDigits(int index, string command)
+        private bool IsNearDigit(int index, string command)
         {
-            return IsInsideBounds(index - 1) && IsInsideBounds(index + command.Length + 1) &&
-                char.IsDigit(_str[index - 1]) && char.IsDigit(_str[index + command.Length + 1]);
+            return IsInsideBounds(index - 1) && IsInsideBounds(index + command.Length) &&
+                (char.IsDigit(_str[index - 1]) || char.IsDigit(_str[index + command.Length]));
         }
 
         private bool IsInsideBounds(int index)
@@ -155,9 +157,8 @@ namespace Markdown
         private string GetMaxCommand(string temp, int index)
         {
             var i = _index;
-            //todo может быть maybe. исправить
             while (!(i + 1 == _str.Length ||
-                _translater.CanDefineCommand(temp + _str[i + 1]) == CommandTranslater.Answer.No))
+                _translater.CanDefineCommand(temp + _str[i + 1]) == CommandTranslater.CanDefineCommandAnswer.No))
             {
                 i++;
                 temp += _str[i];
@@ -168,7 +169,7 @@ namespace Markdown
         class CommandIntoText
         {
             public readonly string Command;
-            public readonly int Position;
+            public readonly int Position; //пока не используется
 
             public CommandIntoText(string command, int position)
             {

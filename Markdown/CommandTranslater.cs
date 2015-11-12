@@ -11,7 +11,8 @@ namespace Markdown
         {
             _commands = commands.Clone();
         }
-        public enum Answer
+
+        public enum CanDefineCommandAnswer
         {
             Yes,
             YesButCanBeLonger,
@@ -20,18 +21,18 @@ namespace Markdown
             EscapeSymbol
         }
 
-        public Answer CanDefineCommand(string str)
+        public CanDefineCommandAnswer CanDefineCommand(string str)
         {
             if(str==@"\")
-                return Answer.EscapeSymbol;
-            var c = _commands.Keys.Where(key => key.Contains(str)).ToList();
-            if (c.Count > 1)
+                return CanDefineCommandAnswer.EscapeSymbol;
+            var possibleKeys = _commands.Keys.Where(key => key.Contains(str)).ToList();
+            if (possibleKeys.Count > 1)
                 return _commands.ContainsKey(str)
-                    ? Answer.YesButCanBeLonger
-                    : Answer.Maybe;
-            if (c.Count == 1)
-                return c.First() == str ? Answer.Yes : Answer.Maybe;
-            return Answer.No;
+                    ? CanDefineCommandAnswer.YesButCanBeLonger
+                    : CanDefineCommandAnswer.Maybe;
+            if (possibleKeys.Count == 1)
+                return possibleKeys.First() == str ? CanDefineCommandAnswer.Yes : CanDefineCommandAnswer.Maybe;
+            return CanDefineCommandAnswer.No;
         }
 
         public string GetClosedForm(string command)

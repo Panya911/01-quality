@@ -22,7 +22,7 @@ namespace MarkDownTests
         }
 
         [Test]
-        public void NotChangeInputStringWithoutCommand()
+        public void notChangeInputStringWithoutCommand()
         {
             var input = "Просто текст";
             var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
@@ -51,7 +51,7 @@ namespace MarkDownTests
                     Result = "<em>Текст окруженный с двух сторон</em> одинарными символами подчерка",
                     TestName = "ReplaceSnakesAtFirstIndex")]
 
-        public string ReplaceSnakeToEm(string str)
+        public string replaceSnakeToEm(string str)
         {
             var markDownStringProcessor = new MarkDownStringProcessor(str, _commands);
             return markDownStringProcessor.Process();
@@ -77,14 +77,14 @@ namespace MarkDownTests
             Result = "<strong>Двумя символами</strong> - должен становиться жирным",
             TestName = "ReplaceDoubleSnakesAtFirstIndex")]
 
-        public string ReplaceDoubleSnakesToStrong(string str)
+        public string replaceDoubleSnakesToStrong(string str)
         {
             var markDownStringProcessor = new MarkDownStringProcessor(str, _commands);
             return markDownStringProcessor.Process();
         }
 
         [Test]
-        public void NotReplaceTags_IntoCodeTag()
+        public void notReplaceTags_IntoCodeTag()
         {
             var input = @"Текст окруженный `одинарными _обратными_ кавычками` (backticks)";
             var expected = @"Текст окруженный <code>одинарными _обратными_ кавычками</code> (backticks)";
@@ -94,15 +94,7 @@ namespace MarkDownTests
         }
 
         [Test]
-        public void ThrowException_OnBadInput()
-        {
-            var input = @"Плохой _текст";
-            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
-            Assert.Throws<ArgumentException>(() => markDownStringProcessor.Process());
-        }
-
-        [Test]
-        public void NotFormateTag_whichNeedntFormat_()
+        public void notFormateTag_whichNeedntFormat_()
         {
             var input = @"Текст окруженный `одинарными $обратными$ кавычками` (backticks)";
             var expected = @"Текст окруженный <code>одинарными $обратными$ кавычками</code> (backticks)";
@@ -117,18 +109,30 @@ namespace MarkDownTests
         [TestCase(@"number is 15__74",
             Result = @"number is 15__74",
             TestName = "notReplaceDoubleUnderscore_intoNumber")]
-        public string NotReplaceCommandIntoNumber(string str)
+        [TestCase(@"внутри текста c цифрами_12_3",
+            Result = @"внутри текста c цифрами_12_3",
+            TestName = "notReplaceUnderscore_beforeDigit")]
+        public string notReplaceCommandIntoNumber(string str)
         {
             var markDownStringProcessor = new MarkDownStringProcessor(str, _commands);
             return markDownStringProcessor.Process();
-
         }
 
         [Test]
-        public void NotReplaceUnpairedCommand()
+        public void notReplaceUnpairedCommand()
         {
             var input = @"__непарные _символы не считаются `выделением";
             var expected = @"__непарные _символы не считаются `выделением";
+            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
+            var result = markDownStringProcessor.Process();
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void replaceAnglebrackets_correctly()
+        {
+            var input = @"Каждый абзац должен быть заключен в теги \<p\>...\</p\>";
+            var expected = @"Каждый абзац должен быть заключен в теги &lt;p&gt;...&lt;/p&gt;";
             var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
             var result = markDownStringProcessor.Process();
             Assert.AreEqual(expected, result);

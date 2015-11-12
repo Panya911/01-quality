@@ -46,6 +46,8 @@
     <Compile Include="Command.cs" />
     <Compile Include="CommandTranslater.cs" />
     <Compile Include="DictionaryExtension.cs" />
+    <Compile Include="HtmlFileBuilder.cs" />
+    <Compile Include="MarkDownParagraphDivider.cs" />
     <Compile Include="MarkDownProcessor.cs" />
     <Compile Include="MarkDownStringProcessor.cs" />
     <Compile Include="Program.cs" />
@@ -53,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="sample.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
