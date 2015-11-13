@@ -6,27 +6,13 @@ using NUnit.Framework;
 namespace MarkDownTests
 {
     [TestFixture]
-    public class MarkDownStringProcessor_should
+    public class MarkDownParagraphProcessor_should
     {
-        private readonly Dictionary<string, Command> _commands;
-
-        public MarkDownStringProcessor_should()
-        {
-            _commands = new Dictionary<string, Command>
-            {
-                ["_"] = new Command("em", needFormatInto: true, paired: true),
-                ["__"] = new Command("strong", needFormatInto: true, paired: true),
-                ["`"] = new Command("code", needFormatInto: false, paired: true),
-                ["$"] = new Command("tag", needFormatInto: false, paired: false)
-            };
-        }
-
         [Test]
         public void notChangeInputStringWithoutCommand()
         {
             var input = "Просто текст";
-            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
-            var result = markDownStringProcessor.Process();
+            var result = MarkDownParagraphProcessor.Process(input);
             var expected = input.Clone();
             Assert.AreEqual(expected, result);
         }
@@ -53,8 +39,7 @@ namespace MarkDownTests
 
         public string replaceSnakeToEm(string str)
         {
-            var markDownStringProcessor = new MarkDownStringProcessor(str, _commands);
-            return markDownStringProcessor.Process();
+            return MarkDownParagraphProcessor.Process(str); //markDownStringProcessor.Process();
         }
 
         [TestCase("Двумя __символами__ - должен становиться жирным",
@@ -79,8 +64,7 @@ namespace MarkDownTests
 
         public string replaceDoubleSnakesToStrong(string str)
         {
-            var markDownStringProcessor = new MarkDownStringProcessor(str, _commands);
-            return markDownStringProcessor.Process();
+            return MarkDownParagraphProcessor.Process(str);
         }
 
         [Test]
@@ -88,8 +72,7 @@ namespace MarkDownTests
         {
             var input = @"Текст окруженный `одинарными _обратными_ кавычками` (backticks)";
             var expected = @"Текст окруженный <code>одинарными _обратными_ кавычками</code> (backticks)";
-            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
-            var result = markDownStringProcessor.Process();
+            var result = MarkDownParagraphProcessor.Process(input);
             Assert.AreEqual(expected, result);
         }
 
@@ -98,8 +81,7 @@ namespace MarkDownTests
         {
             var input = @"Текст окруженный `одинарными $обратными$ кавычками` (backticks)";
             var expected = @"Текст окруженный <code>одинарными $обратными$ кавычками</code> (backticks)";
-            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
-            var result = markDownStringProcessor.Process();
+            var result = MarkDownParagraphProcessor.Process(input);
             Assert.AreEqual(expected, result);
         }
 
@@ -114,8 +96,7 @@ namespace MarkDownTests
             TestName = "notReplaceUnderscore_beforeDigit")]
         public string notReplaceCommandIntoNumber(string str)
         {
-            var markDownStringProcessor = new MarkDownStringProcessor(str, _commands);
-            return markDownStringProcessor.Process();
+            return MarkDownParagraphProcessor.Process(str);
         }
 
         [Test]
@@ -123,8 +104,7 @@ namespace MarkDownTests
         {
             var input = @"__непарные _символы не считаются `выделением";
             var expected = @"__непарные _символы не считаются `выделением";
-            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
-            var result = markDownStringProcessor.Process();
+            var result = MarkDownParagraphProcessor.Process(input);
             Assert.AreEqual(expected, result);
         }
 
@@ -133,8 +113,7 @@ namespace MarkDownTests
         {
             var input = @"Каждый абзац должен быть заключен в теги \<p\>...\</p\>";
             var expected = @"Каждый абзац должен быть заключен в теги &lt;p&gt;...&lt;/p&gt;";
-            var markDownStringProcessor = new MarkDownStringProcessor(input, _commands);
-            var result = markDownStringProcessor.Process();
+            var result = MarkDownParagraphProcessor.Process(input);
             Assert.AreEqual(expected, result);
         }
     }

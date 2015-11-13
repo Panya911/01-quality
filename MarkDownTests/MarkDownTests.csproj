@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MarkDownParagraphDivider_should.cs" />
-    <Compile Include="MarkDownStringProcessor_should.cs" />
+    <Compile Include="MarkDownParser_should.cs" />
+    <Compile Include="MarkDownParagraphProcessor_should.cs" />
+    <Compile Include="MarkDownValidator_should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

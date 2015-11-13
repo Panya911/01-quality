@@ -1,20 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Markdown
 {
-    public class MarkDownProcessor
+    public static class MarkDownProcessor
     {
-        public static string ProcessText(string text, Dictionary<string, Command> commands)
+        public static string ProcessText(string text)
         {
             var strBuilder = new StringBuilder();
             var paragraphs = MarkDownParagraphDivider.DivideStringOnParagraph(text);
-            foreach (var paragraph in paragraphs)
-            {
-                var stringProcessor = new MarkDownStringProcessor(paragraph, commands);
-                var result = stringProcessor.Process();
-                strBuilder.Append("<p>" + result + "</p>");
-            }
+            foreach (var handledParagraph in paragraphs.Select(MarkDownParagraphProcessor.Process))
+                strBuilder.Append("<p>" + handledParagraph + "</p>");
             return strBuilder.ToString();
         }
     }

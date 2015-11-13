@@ -43,15 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command.cs" />
-    <Compile Include="CommandTranslater.cs" />
-    <Compile Include="DictionaryExtension.cs" />
     <Compile Include="HtmlFileBuilder.cs" />
+    <Compile Include="MarkUpElements\IMarkUpElement.cs" />
     <Compile Include="MarkDownParagraphDivider.cs" />
+    <Compile Include="MarkDownParser.cs" />
     <Compile Include="MarkDownProcessor.cs" />
-    <Compile Include="MarkDownStringProcessor.cs" />
+    <Compile Include="MarkDownParagraphProcessor.cs" />
+    <Compile Include="MarkDownValidator.cs" />
+    <Compile Include="MarkupTags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MarkUpElements\Tag.cs" />
+    <Compile Include="MarkUpElements\Text.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

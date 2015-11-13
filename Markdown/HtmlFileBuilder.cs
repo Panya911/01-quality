@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Markdown
 {
-    public class HtmlFileBuilder
+    public static class HtmlFileBuilder
     {
         public static string Build(string content)
         {
