@@ -47,6 +47,7 @@
     <Compile Include="MarkDownParagraphDivider_should.cs" />
     <Compile Include="MarkDownParser_should.cs" />
     <Compile Include="MarkDownParagraphProcessor_should.cs" />
+    <Compile Include="MarkDownProcessor_should.cs" />
     <Compile Include="MarkDownValidator_should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,6 +59,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="testedText.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="answer.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

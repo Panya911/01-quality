@@ -8,7 +8,8 @@ namespace Markdown
     {
         public static string[] DivideStringOnParagraph(string str)
         {
-            var regex = new Regex(@"\s*\n\s*\n\s*");
+            var str1 = @"\s*" + Environment.NewLine + @"\s*" + Environment.NewLine + @"\s*";
+            var regex = new Regex(str1);
             var result = regex.Split(str);
             return result;
         }

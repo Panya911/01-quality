@@ -23,6 +23,16 @@ namespace MarkDownTests
         }
 
         [Test]
+        public void allow_intersectedTags()
+        {
+            var inputSequance = new List<IMarkUpElement> { MarkupTags.Em, MarkupTags.Strong, new Text("text1"), MarkupTags.Em, new Text("text2"), MarkupTags.Strong };
+            MarkDownValidator.Validate(inputSequance);
+            CollectionAssert.AreEqual(
+                new List<IMarkUpElement> { MarkupTags.Em, MarkupTags.Strong, new Text("text1"), MarkupTags.Em, new Text("text2"), MarkupTags.Strong },
+                inputSequance);
+        }
+
+        [Test]
         public void replaceUnpairedTags_toText()
         {
             var inputSequance = new List<IMarkUpElement> { MarkupTags.Em, new Text("text1"), new Text("text2") };
